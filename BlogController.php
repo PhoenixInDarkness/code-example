@@ -21,17 +21,26 @@ class BlogController extends Controller
 {
 
     /**
+     * Главная страница
+     * 
      * @return \Illuminate\View\View
      */
 	public function index()
 	{
 		$oMeta = new MetaTag;
+		$aTags = array(
+		    'key' => 'Последние публикации / HSE',
+            'value' => 'Последние публикации на hseblog'
+        );
+		$oMeta = $oMeta->set($aTags);
 		$oPosts = Post::where('is_sandbox', 0)->orderBy('created_at', 'desc')->paginate(10);
 
 		return view('posts.index', compact('oPosts', 'oMeta'));
 	}
 
     /**
+     * Добавить в закладки
+     * 
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -64,6 +73,8 @@ class BlogController extends Controller
 	}
 
     /**
+     * Список авторов
+     * 
      * @return \Illuminate\View\View
      */
 	public function users(){
@@ -74,10 +85,11 @@ class BlogController extends Controller
 	}
 
     /**
+     * Добавить/удалить подписку
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-	public function subscriptionsCreate(Request $request)
+	public function subscriptions(Request $request)
 	{
 		$oUser = Auth::user();
 		$bCheck = $oUser->checkSub($request->author_id);
@@ -96,8 +108,10 @@ class BlogController extends Controller
 	}
 
     /**
+     * Получить теги 
+     * 
      * @param Request $request
-     * @return string
+     * @return array()
      */
 	public function tag(Request $request)
 	{
