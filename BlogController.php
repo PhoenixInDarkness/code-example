@@ -2,37 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\PropertyContainer;
 use Illuminate\Http\Request;
 use App\Models\Blog\Post;
-use App\Models\Blog\Category;
 use App\Models\Blog\Tag;
-use App\Models\Blog\Like;
-use App\Models\Blog\Subscription;
-use App\Models\Blog\Comment;
 use App\Models\Blog\MetaTag;
+use App\Traits\HelpTraits;
 use App\User;
-use Carbon\Carbon;
 use Auth;
 use DB;
 use Route;
 
 class BlogController extends Controller
 {
+    use HelpTraits;
 
     /**
      * Главная страница
-     * 
+     *
      * @return \Illuminate\View\View
      */
 	public function index()
 	{
 		$oMeta = new MetaTag;
-		$aTags = array(
-			'key' => 'Последние публикации / HSE',
-			'value' => 'Последние публикации на hseblog'
-		);
-		$oMeta = $oMeta->set($aTags);
+        $aMeta = array();
+        $aMeta = $this->prepareMetaInfo($aMeta, 'title', 'Последние публикации / HSE');
+        $aMeta = $this->prepareMetaInfo($aMeta, 'description', 'Последние публикации на hseblog');
+		$oMeta = $oMeta->set($aMeta);
 		$oPosts = Post::where('is_sandbox', 0)->orderBy('created_at', 'desc')->paginate(10);
 
 		return view('posts.index', compact('oPosts', 'oMeta'));
@@ -40,13 +35,13 @@ class BlogController extends Controller
 
     /**
      * Добавить в закладки
-     * 
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
 	public function bookmarkAdd(Request $request)
 	{
-	     if(!Auth::user()){
+		if(!Auth::user()){
 			$aResponse = array('status' => false);
 			return response()->json($aResponse);
 			exit;
@@ -74,7 +69,7 @@ class BlogController extends Controller
 
     /**
      * Список авторов
-     * 
+     *
      * @return \Illuminate\View\View
      */
 	public function users(){
@@ -89,7 +84,7 @@ class BlogController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-	public function subscriptions(Request $request)
+	public function subscriptionsCreate(Request $request)
 	{
 		$oUser = Auth::user();
 		$bCheck = $oUser->checkSub($request->author_id);
@@ -108,8 +103,8 @@ class BlogController extends Controller
 	}
 
     /**
-     * Получить теги 
-     * 
+     * Получить теги
+     *
      * @param Request $request
      * @return array()
      */
