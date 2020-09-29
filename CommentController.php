@@ -13,6 +13,8 @@ class CommentsController extends Controller
     use HelpTraits;
 
     /**
+     * Возвращает html с отрисоованым комментарием
+     *
      * @param Request $request
      * @return \Illuminate\View\View|string
      * @throws \Illuminate\Validation\ValidationException
@@ -39,7 +41,6 @@ class CommentsController extends Controller
             'text'	=>	'required',
         ], $this->messages());
 
-
         $isset_parent = (isset($request->parent_id))??true;
         $oComment = Comment::add($request->all());
         $oComment->setPost($request->get('post_id'));
@@ -58,6 +59,8 @@ class CommentsController extends Controller
     }
 
     /**
+     * Возращает html с формой для редактирования комметария
+     *
      * @param Request $request
      * @return \Illuminate\View\View
      */
@@ -95,6 +98,8 @@ class CommentsController extends Controller
     }
 
     /**
+     * Удалить комментарий
+     *
      * @param $id
      * @return \Illuminate\View\View|integer
      */
@@ -113,6 +118,7 @@ class CommentsController extends Controller
     }
 
     /**
+     * Возращает html с формой для ответа на комментарий
      * @param Request $request
      * @return \Illuminate\View\View
      */
@@ -126,6 +132,8 @@ class CommentsController extends Controller
     }
 
     /**
+     * Метод для вывода кастомных сообщений валидации
+     *
      * @return array()
      */
     public function messages(){
