@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use App\Models\Blog\Post;
 use App\Traits\HelpTraits;
 use App\Models\Blog\Comment;
 use Illuminate\Http\Request;
