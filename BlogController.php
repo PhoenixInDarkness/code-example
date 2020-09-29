@@ -29,9 +29,9 @@ class BlogController extends Controller
 	{
 		$oMeta = new MetaTag;
 		$aTags = array(
-		    'key' => 'Последние публикации / HSE',
-            'value' => 'Последние публикации на hseblog'
-        );
+			'key' => 'Последние публикации / HSE',
+			'value' => 'Последние публикации на hseblog'
+		);
 		$oMeta = $oMeta->set($aTags);
 		$oPosts = Post::where('is_sandbox', 0)->orderBy('created_at', 'desc')->paginate(10);
 
@@ -46,7 +46,7 @@ class BlogController extends Controller
      */
 	public function bookmarkAdd(Request $request)
 	{
-		if(!Auth::user()){
+	     if(!Auth::user()){
 			$aResponse = array('status' => false);
 			return response()->json($aResponse);
 			exit;
