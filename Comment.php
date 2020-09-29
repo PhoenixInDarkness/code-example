@@ -16,21 +16,42 @@ class Comment extends Model
 
     protected $fillable = ['text'];
 
+    /**
+     * Отношения с моделью App\Models\Blog\Post
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function post()
     {
     	return $this->belongsTo(Post::class);
     }
 
+    /**
+     * Отношения с моделью App\Models\Blog\User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function author()
     {
     	return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * Отношения с моделью App\Models\Blog\User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function likes()
     {
     	return $this->morphMany(Like::class, 'entity');
     }
 
+    /**
+     * Добавление комментария
+     *
+     * @param $fields
+     * @return static
+     */
     public static function add($fields)
     {
 
@@ -47,11 +68,19 @@ class Comment extends Model
         return $comment;
     }
 
+    /**
+     * Удаление комментария
+     */
     public function remove()
     {
         $this->delete();
     }
 
+    /**
+     * Прикрепляет комментарий к посту
+     *
+     * @param $id
+     */
     public function setPost($id)
     {
         if($id == null) {return;}
@@ -59,6 +88,11 @@ class Comment extends Model
         $this->save();
     }
 
+    /**
+     * Устанавливает родителя для комментария
+     *
+     * @param $id
+     */
     public function setParent($id)
     {
         if($id == null) {return;}
@@ -66,6 +100,11 @@ class Comment extends Model
         $this->save();
     }
 
+    /**
+     * Возвращает результат: лайки минус дизлайки
+     *
+     * @return int
+     */
     public function getCountLikes()
     {
         $like = $this->likes()->where('active', '=', '1')->where('type', '=', '1')->count();
@@ -75,11 +114,23 @@ class Comment extends Model
         return $sum;
     }
 
+    /**
+     * Получить лайк
+     *
+     * @return Model|\Illuminate\Database\Eloquent\Relations\MorphMany|object|null
+     */
     public function getLike()
     {
         return $this->likes()->first();
     }
 
+    /**
+     * Проверить установлен ли лайк
+     *
+     * @param $entity_id
+     * @param $type
+     * @return Model|\Illuminate\Database\Eloquent\Relations\MorphMany|object|null
+     */
     public function checkLike($entity_id, $type)
     {
         $user_id = Auth::user()->id;
@@ -88,11 +139,22 @@ class Comment extends Model
         return $check;
     }
 
+    /**
+     * Считает количество комментариев пользователя
+     *
+     * @param $id
+     * @return mixed
+     */
     public function countUserComments($id)
     {
         return $this->where('user_id', $id)->count();
     }
 
+    /**
+     * Получить описание поста
+     *
+     * @return false|mixed
+     */
     public function getTitlePost()
     {
         if($this->post){
@@ -104,6 +166,11 @@ class Comment extends Model
         }
     }
 
+    /**
+     * Получить человекочитаемую дату
+     * @param $date
+     * @return string
+     */
     public function getHumansDate($date)
     {
         $newDate = self::getRuHumansDate($date);
