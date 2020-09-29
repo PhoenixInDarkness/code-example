@@ -7,8 +7,6 @@ use App\User;
 use App\Traits\HelpTraits;
 use Wkhooy\ObsceneCensorRus;
 use Illuminate\Database\Eloquent\Model;
-use Laravelrus\LocalizedCarbon\LocalizedCarbon;
-use Laravelrus\LocalizedCarbon\Traits\LocalizedEloquentTrait;
 
 class Comment extends Model
 {
