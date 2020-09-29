@@ -2,7 +2,6 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Facades\DB;
 use ReallySimpleJWT\Token;
 use Jenssegers\Date\Date;
 
@@ -79,5 +78,22 @@ trait HelpTraits {
 
 		return $text;
 	}
+	
+	/**
+     * Создаём или добавляем данные в массив с метатегами
+     *
+     * @param $sKey
+     * @param $sValue
+     * @return array()
+     */
+    public function prepareMetaInfo($aTags, $sKey, $sValue)
+    {
+        $aTags[] = array(
+            'key' => $sKey,
+            'value' => $sValue
+        );
+
+        return $aTags;
+    }
 
 }
